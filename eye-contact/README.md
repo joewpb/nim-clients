@@ -1,11 +1,11 @@
 
 # NVIDIA Maxine Eye Contact NIM Client
 
-This package has a sample client which demonstrates interacting with a Maxine Eye Contact NIM
+This package has a sample client which demonstrates interaction with a Maxine Eye Contact NIM
 
 ## Getting Started
 
-NVIDIA Maxine NIM Client packages uses gRPC APIs. Instructions below demonstrate usage of Eye contact model using Python gRPC client.
+NVIDIA Maxine NIM Client packages use gRPC APIs. Instructions below demonstrate usage of Eye contact NIM using Python gRPC client.
 
 ## Pre-requisites
 
