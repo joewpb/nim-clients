@@ -1,0 +1,212 @@
+// Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
+
+
+syntax = "proto3";
+
+package nvidia.maxine.audio2face2d.v1;
+
+import "google/protobuf/empty.proto";
+
+// The Audio2Face2DService provides APIs to run the
+// Maxine Audio to Face - 2D feature.
+service Audio2Face2DService {
+  // Animate is a bidirectional streaming API to run the
+  // Audio2Face-2D.
+  //
+  // The input message can contain AnimateConfig or bytes.
+  // In the beginning of the stream, a request with AnimateConfig should
+  // be sent to the server to set the feature's parameters.
+  // The server will echo back a response with the config to signify that the
+  // parameters were properly set. It is mandatory to set the portrait_image
+  // config, other configuration parameters are optional and a default value will
+  // be used if not set. Any AnimateConfig sent during the middle of the stream
+  // will be ignored.
+  //
+  // After the configuration step, the client streams the input wav file in
+  // chunks in the input message and receives the output mp4 file in chunks in
+  // the output message. While the inference is running, the server will periodically
+  // echo empty message to keep the channel alive. The client should ignore this message.
+  //
+  // It is recommended that the client should pass one file per API invocation.
+  // The configurations are also set per invocation.
+  rpc Animate(stream AnimateRequest)
+      returns (stream AnimateResponse) {  
+        }
+}
+
+// Configuration for Animate API.
+message AnimateConfig {
+    // Portrait image (jpg/jpeg/png)
+    bytes portrait_image = 1;
+
+    // Model selection: 0 - performance or 1 - quality
+    // Default: quality
+    optional ModelSelection model_selection = 2;
+
+    // Audio2Face animation cropping mode
+    // Default: ANIMATION_CROPPING_MODE_REGISTRATION_BLENDING
+    optional AnimationCroppingMode animation_crop_mode = 3;
+
+    // Head Pose Animation mode
+    // Default: HEAD_POSE_MODE_RETAIN_FROM_PORTRAIT_IMAGE
+    optional HeadPoseMode head_pose_mode = 4;
+
+    // Flag to enable Gaze look Away
+    // Default: false
+    optional bool enable_lookaway = 5;
+
+    // The maximum integer value of gaze offset when lookaway is enabled
+    // Default:20 Unit: Degrees
+    optional uint32 lookaway_max_offset = 6;
+
+    // Range for picking the number of frames at which random look away occurs
+    // Default: 90 | Range: [1, 600] | Unit: Frames
+    optional uint32 lookaway_interval_range = 7;
+
+    // Minimum limit for the number of frames at which random look away occurs
+    // Default: 240 | Range: [1, 600] | Unit: Frames
+    optional uint32 lookaway_interval_min = 8;
+
+    // The frequency of eye blinks per minute
+    // Default: 6 | Range: [0, 120] | Unit: Frames
+    // Note: 0 = disable eye blink
+    optional uint32 blink_frequency = 9;
+
+    // The duration of an eye blink
+    // Default: 10 | Range: [2, 150] | Unit: Frames
+    optional uint32 blink_duration = 10;
+
+    // A multiplier to exaggerate the mouth expression.
+    // Default: 1.4f (for quality mode), 1.0f (for performance mode)
+    // Range: [1.0f, 2.0f]
+    optional float mouth_expression_multiplier = 11;
+
+    // A multiplier to dampen range of Head Pose Animation
+    // This is applicable only for HEAD_POSE_MODE_PRE_DEFINED_ANIMATION
+    // Default: 1.0f (quality mode), 0.4f (performance mode) | Range: [0.0f, 1.0f]
+    optional float head_pose_multiplier = 12;
+
+    // Quaternion that provides the head pose rotation to be applied.
+    // This is valid only for HEAD_POSE_MODE_USER_DEFINED_ANIMATION
+    optional QuaternionStream input_head_rotation = 13;
+
+    // Vector3f that provides the head pose rotation to be applied.
+    // This is valid only for HEAD_POSE_MODE_USER_DEFINED_ANIMATION
+    optional Vector3fStream input_head_translation = 14;
+}
+
+// Model selection option
+enum ModelSelection {
+  MODEL_SELECTION_UNSPECIFIED = 0;
+  // Performance model
+  MODEL_SELECTION_PERF = 1;
+  // Quality model
+  MODEL_SELECTION_QUALITY = 2;
+}
+
+// Animation cropping mode which controls output video resolution
+enum AnimationCroppingMode {
+  ANIMATION_CROPPING_MODE_UNSPECIFIED = 0;
+
+  // Produces fixed resolution of 512x512 animation output
+  // Face crop will be extracted from the portrait image provided
+  ANIMATION_CROPPING_MODE_FACEBOX = 1;
+
+  // The animated face crop will be registered and blended back into the portrait photo.
+  // The output image includes both the animated
+  // face crop and the surrounding area, with the same resolution as the portrait photo
+  ANIMATION_CROPPING_MODE_REGISTRATION_BLENDING = 2;
+
+  // Light weight and faster version of mode 2, without registration.
+  // Preferred over mode 3 if quality is the primary concern
+  ANIMATION_CROPPING_MODE_INSET_BLENDING = 3;
+}
+
+// Head Pose mode
+enum HeadPoseMode{
+  HEAD_POSE_MODE_UNSPECIFIED = 0;
+  // retains the head pose from input portrait image
+  HEAD_POSE_MODE_RETAIN_FROM_PORTRAIT_IMAGE = 1;
+  // NIM generates a pre-defined animation for the head pose
+  HEAD_POSE_MODE_PRE_DEFINED_ANIMATION = 2;
+  // NIM generates headpose animation based on headpose_inputs provided by user
+  HEAD_POSE_MODE_USER_DEFINED_ANIMATION = 3;
+}
+
+// Generic 3D float vector
+message Vector3f {
+  // x-coordinate
+  float x = 1;
+  // y-coordinate
+  float y = 2;
+  // z-coordinate
+  float z = 3;
+}
+
+// Stream of 3D-Vectors
+message Vector3fStream{
+    repeated Vector3f values = 1;
+}
+
+// Generic Quaternion
+message Quaternion {
+  // x-coordinate
+  float x = 1;
+  // y-coordinate
+  float y = 2;
+  // z-coordinate
+  float z = 3;
+  // w-coordinate
+  float w = 4;
+}
+
+// Stream of Quaternions
+message QuaternionStream{
+  repeated Quaternion values = 1;
+}
+
+// Input message for Animate API.
+// May contain feature configuration or a chunk of input wav file data.
+message AnimateRequest {
+  oneof stream_input {
+    // Configuration parameters for the request
+    AnimateConfig config = 1;
+
+    // .wav file based audio data
+    bytes audio_file_data = 2;
+  }
+}
+
+// Output message for Animate API.
+// May contain feature configuration, a chunk of output mp4 file data
+// or an empty message to keep the connection alive.
+message AnimateResponse {
+  oneof stream_output {
+    // Configuration parameters used
+    AnimateConfig config = 1;
+
+    // Output .mp4 video stream data
+    bytes video_file_data = 2;
+
+    // Keep alive signaling flag
+    google.protobuf.Empty keep_alive = 3;
+  }
+}
