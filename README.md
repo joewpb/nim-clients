@@ -12,3 +12,6 @@ This repository provides sample client applications to interact with Maxine NIMs
 
 - [`studio-voice`](studio-voice) - NVIDIA Maxine Studio Voice feature enhances the input speech recorded through low quality microphones in noisy and reverberant environments to studio-recorded quality speech.
 [[Demo](https://build.nvidia.com/nvidia/studiovoice)] , [[Docs](https://docs.nvidia.com/nim/maxine/studio-voice/latest/index.html)]
+
+- [`audio2face-2d`](audio2face-2d) - NVIDIA Maxine Audio2Face-2D feature generates facial animations from a portrait photo and audio input, synchronizing mouth movements with speech to create realistic and engaging video outputs.
+[[Demo](https://build.nvidia.com/nvidia/audio2face-2d)] , [[Docs](https://docs.nvidia.com/nim/maxine/audio2face-2d/latest/index.html)]
