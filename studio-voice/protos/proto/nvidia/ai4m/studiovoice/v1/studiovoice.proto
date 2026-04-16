@@ -1,4 +1,6 @@
-// Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-FileCopyrightText: Copyright (c) 2025-2026 NVIDIA CORPORATION &
+// AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: MIT
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -20,33 +22,36 @@
 
 syntax = "proto3";
 
-package nvidia.maxine.studiovoice.v1;
+package nvidia.ai4m.studiovoice.v1;
 
-// The MaxineStudioVoice service provides APIs to run the
-// Maxine Studio Voice NIM.
-service MaxineStudioVoice {
-    // EnhanceAudio is a bidirectional streaming RPC to run the
-    // Maxine Studio Voice NIM on audio files.
-    //
-    // The client streams the input audio file in chunks in the input message and 
-    // receives the output audio file in chunks in the output message.
-    //
-    // The client should only pass one audio file per RPC invocation.
-    rpc EnhanceAudio(stream EnhanceAudioRequest) returns (stream EnhanceAudioResponse) {}
+// The StudioVoice service provides APIs to run the
+// Studio Voice NIM.
+service StudioVoice {
+  // EnhanceAudio is a bidirectional streaming RPC to run the
+  // Studio Voice NIM on audio files.
+  //
+  // The client streams the input audio file in chunks in
+  // the input message and receives the output audio file
+  // in chunks in the output message.
+  //
+  // The client should only pass one audio file per RPC
+  // invocation.
+  rpc EnhanceAudio(stream EnhanceAudioRequest)
+      returns (stream EnhanceAudioResponse) {}
 }
 
 // Input message for EnhanceAudio RPC.
 // Contains a chunk of input audio file data.
 message EnhanceAudioRequest {
-    oneof stream_input {
-        bytes audio_stream_data = 1;
-    }
+  oneof stream_input {
+    bytes audio_stream_data = 1;
+  }
 }
 
 // Output message for EnhanceAudio RPC.
 // Contains a chunk of output audio file data.
 message EnhanceAudioResponse {
-    oneof stream_output {
-        bytes audio_stream_data = 1;
-    }
+  oneof stream_output {
+    bytes audio_stream_data = 1;
+  }
 }
