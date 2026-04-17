@@ -18,6 +18,9 @@ This repository provides sample client applications to interact with NVIDIA AI f
 
 - [`lipsync`](lipsync) - NVIDIA LipSync syncs lip movements in a video to match the provided speech audio, enhancing realism and accuracy in speech animation. Takes an audio and video input, generating a synchronized output video. [[Demo](https://build.nvidia.com/nvidia/lipsync)] , [[Docs](https://docs.nvidia.com/nim/maxine/lipsync/latest/index.html)]
 
+- [`relighting`](relighting) - NVIDIA Relighting applies AI-powered HDR lighting effects to video streams. Supports streaming and transactional modes, multiple background modes, and a Python client.
+  [[Docs](https://docs.nvidia.com/nim/maxine/relighting/latest/index.html)]
+
 - [`studio-voice`](studio-voice) - NVIDIA Studio Voice feature enhances the input speech recorded through low quality microphones in noisy and reverberant environments to studio-recorded quality speech.
 [[Demo](https://build.nvidia.com/nvidia/studiovoice)] , [[Docs](https://docs.nvidia.com/nim/maxine/studio-voice/latest/index.html)]
 
