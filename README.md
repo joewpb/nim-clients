@@ -1,4 +1,4 @@
-# NVIDIA AI for Media NIM
+# NVIDIA AI for Media NIMs
 
 NVIDIA AI for Media is a suite of high-performance, easy-to-use, NVIDIA Inference Microservices (NIMs) for deploying AI features that enhance audio, video, and augmented reality effects for video conferencing and tele-presence.
 
