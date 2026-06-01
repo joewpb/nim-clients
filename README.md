@@ -26,3 +26,16 @@ This repository provides sample client applications to interact with NVIDIA AI f
 
 - [`synthetic-video-detector`](synthetic-video-detector) - NVIDIA Synthetic Video Detector analyzes video files to detect whether they are synthetic (AI-generated) or real.
 [[Demo](https://build.nvidia.com/nvidia/synthetic-video-detector)] , [[Docs](https://docs.nvidia.com/nim/maxine/synthetic-video-detector/latest/index.html)]
+
+## NVIDIA AI for Media ST 2110 NIMs
+
+For live IP video workflows, the following NIMs are designed to run with [NVIDIA Holoscan for Media](https://docs.nvidia.com/holoscan-for-media/latest/index.html) over SMPTE ST 2110. Each directory provides Helm charts and a sample client.
+
+- [`st2110/active-speaker-detection`](st2110/active-speaker-detection) - NVIDIA Active Speaker Detection ST 2110 NIM analyzes video, audio, and diarization data to identify and track active speakers across frames in real-time live IP video workflows, returning per-frame speaker data including bounding boxes, speaker identifiers, active speaking state, and confidence scores.
+[[Demo](https://build.nvidia.com/nvidia/active-speaker-detection)] , [[Docs](https://docs.nvidia.com/nim/maxine/active-speaker-detection-h4m/latest/index.html)]
+
+- [`st2110/lipsync`](st2110/lipsync) - NVIDIA LipSync ST 2110 NIM processes video and speech inputs to generate lip movements synchronized with the input speech for real-time dubbing and localization workflows in live IP broadcast environments, with support for per-frame speaker bounding box metadata in multi-speaker scenes.
+[[Demo](https://build.nvidia.com/nvidia/lipsync)] , [[Docs](https://docs.nvidia.com/nim/maxine/lipsync-h4m/latest/index.html)]
+
+- [`st2110/studio-voice`](st2110/studio-voice) - NVIDIA Studio Voice ST 2110 NIM performs real-time AI-based speech enhancement over IP media networks, ingesting and publishing PCM audio over SMPTE ST 2110-30 to produce studio-recorded quality speech for live broadcast and production workflows.
+[[Demo](https://build.nvidia.com/nvidia/studiovoice)] , [[Docs](https://docs.nvidia.com/nim/maxine/studio-voice-h4m/latest/index.html)]
